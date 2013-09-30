@@ -20,9 +20,9 @@ import org.gradle.plugins.ide.jdev.model.JDevModule
 import org.gradle.plugins.ide.jdev.model.Module
 
 /**
- * Generates an IDEA module file. If you want to fine tune the idea configuration
+ * Generates an JDEV module file. If you want to fine tune the jdev configuration
  * <p>
- * Please refer to interesting examples on idea configuration in {@link JDevModule}.
+ * Please refer to interesting examples on jdev configuration in {@link JDevModule}.
  * <p>
  * At this moment nearly all configuration is done via {@link JDevModule}.
  */
@@ -42,11 +42,11 @@ public class GenerateJDevModule extends XmlGeneratorTask<Module> {
     }
 
     /**
-     * Configures output *.iml file. It's <b>optional</b> because the task should configure it correctly for you
+     * Configures output *.jpr file. It's <b>optional</b> because the task should configure it correctly for you
      * (including making sure it is unique in the multi-module build).
-     * If you really need to change the output file name it is much easier to do it via the <b>idea.module.name</b> property.
+     * If you really need to change the output file name it is much easier to do it via the <b>jdev.module.name</b> property.
      * <p>
-     * Please refer to documentation in {@link JDevModule} <b>name</b> property. In IntelliJ IDEA the module name is the same as the name of the *.iml file.
+     * Please refer to documentation in {@link JDevModule} <b>name</b> property. In Oracle JDEV the module name is the same as the name of the *.jpr file.
      */
     File getOutputFile() {
         return module.outputFile

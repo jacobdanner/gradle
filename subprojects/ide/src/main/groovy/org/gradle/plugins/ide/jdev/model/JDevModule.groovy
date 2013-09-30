@@ -22,14 +22,14 @@ import org.gradle.plugins.ide.jdev.model.internal.JDevDependenciesProvider
 import org.gradle.util.ConfigureUtil
 
 /**
- * Enables fine-tuning module details (*.iml file) of the IDEA plugin .
+ * Enables fine-tuning module details (*.jpr file) of the JDEV plugin .
  * <p>
  * Example of use with a blend of all possible properties.
  * Typically you don't have configure this model directly because Gradle configures it for you.
  *
  * <pre autoTested=''>
  * apply plugin: 'java'
- * apply plugin: 'idea'
+ * apply plugin: 'jdev'
  *
  * //for the sake of this example, let's introduce a 'provided' configuration
  * configurations {
@@ -41,9 +41,9 @@ import org.gradle.util.ConfigureUtil
  *   //provided "some.interesting:dependency:1.0"
  * }
  *
- * idea {
+ * jdev {
  *
- *   //if you want parts of paths in resulting files (*.iml, etc.) to be replaced by variables (Files)
+ *   //if you want parts of paths in resulting files (*.jpr, etc.) to be replaced by variables (Files)
  *   pathVariables GRADLE_HOME: file('~/cool-software/gradle')
  *
  *   module {
@@ -53,7 +53,7 @@ import org.gradle.util.ConfigureUtil
  *     //and some extra test source dirs
  *     testSourceDirs += file('some-extra-test-dir')
  *
- *     //and some extra dirs that should be excluded by IDEA
+ *     //and some extra dirs that should be excluded by JDEV
  *     excludeDirs += file('some-extra-exclude-dir')
  *
  *     //if you don't like the name Gradle has chosen
@@ -64,13 +64,13 @@ import org.gradle.util.ConfigureUtil
  *     outputDir = file('muchBetterOutputDir')
  *     testOutputDir = file('muchBetterTestOutputDir')
  *
- *     //if you prefer different SDK than that inherited from IDEA project
+ *     //if you prefer different SDK than that inherited from JDEV project
  *     jdkName = '1.6'
  *
  *     //if you need to put 'provided' dependencies on the classpath
  *     scopes.PROVIDED.plus += configurations.provided
  *
- *     //if 'content root' (as IDEA calls it) of the module is different
+ *     //if 'content root' (as JDEV calls it) of the module is different
  *     contentRoot = file('my-module-content-root')
  *
  *     //if you love browsing Javadoc
@@ -83,7 +83,7 @@ import org.gradle.util.ConfigureUtil
  * </pre>
  *
  * For tackling edge cases users can perform advanced configuration on resulting XML file.
- * It is also possible to affect the way the IDEA plugin merges the existing configuration
+ * It is also possible to affect the way the JDEV plugin merges the existing configuration
  * via beforeMerged and whenMerged closures.
  * <p>
  * beforeMerged and whenMerged closures receive {@link Module} object
@@ -92,29 +92,29 @@ import org.gradle.util.ConfigureUtil
  *
  * <pre autoTested=''>
  * apply plugin: 'java'
- * apply plugin: 'idea'
+ * apply plugin: 'jdev'
  *
- * idea {
+ * jdev {
  *   module {
- *     iml {
- *       //if you like to keep *.iml in a secret folder
+ *     jpr {
+ *       //if you like to keep *.jpr in a secret folder
  *       generateTo = file('secret-modules-folder')
  *
  *       //if you want to mess with the resulting XML in whatever way you fancy
  *       withXml {
  *         def node = it.asNode()
  *         node.appendNode('iLoveGradle', 'true')
- *         node.appendNode('butAlso', 'I find increasing pleasure tinkering with output *.iml contents. Yeah!!!')
+ *         node.appendNode('butAlso', 'I find increasing pleasure tinkering with output *.jpr contents. Yeah!!!')
  *       }
  *
- *       //closure executed after *.iml content is loaded from existing file
+ *       //closure executed after *.jpr content is loaded from existing file
  *       //but before gradle build information is merged
  *       beforeMerged { module ->
  *         //if you want skip merging exclude dirs
  *         module.excludeFolders.clear()
  *       }
  *
- *       //closure executed after *.iml content is loaded from existing file
+ *       //closure executed after *.jpr content is loaded from existing file
  *       //and after gradle build information is merged
  *       whenMerged { module ->
  *         //you can tinker with {@link Module}
@@ -128,24 +128,24 @@ import org.gradle.util.ConfigureUtil
 class JDevModule {
 
    /**
-     * Configures module name, that is the name of the *.iml file.
+     * Configures module name, that is the name of the *.jpr file.
      * <p>
      * It's <b>optional</b> because the task should configure it correctly for you.
      * By default it will try to use the <b>project.name</b> or prefix it with a part of a <b>project.path</b>
      * to make sure the module name is unique in the scope of a multi-module build.
      * The 'uniqueness' of a module name is required for correct import
-     * into IDEA and the task will make sure the name is unique.
+     * into JDEV and the task will make sure the name is unique.
      * <p>
      * <b>since</b> 1.0-milestone-2
      * <p>
-     * If your project has problems with unique names it is recommended to always run <tt>gradle idea</tt> from the root, i.e. for all subprojects.
-     * If you run the generation of the IDEA module only for a single subproject then you may have different results
-     * because the unique names are calculated based on IDEA modules that are involved in the specific build run.
+     * If your project has problems with unique names it is recommended to always run <tt>gradle jdev</tt> from the root, i.e. for all subprojects.
+     * If you run the generation of the JDEV module only for a single subproject then you may have different results
+     * because the unique names are calculated based on JDEV modules that are involved in the specific build run.
      * <p>
-     * If you update the module names then make sure you run <tt>gradle idea</tt> from the root, e.g. for all subprojects, including generation of IDEA project.
+     * If you update the module names then make sure you run <tt>gradle jdev</tt> from the root, e.g. for all subprojects, including generation of JDEV project.
      * The reason is that there may be subprojects that depend on the subproject with amended module name.
      * So you want them to be generated as well because the module dependencies need to refer to the amended project name.
-     * Basically, for non-trivial projects it is recommended to always run <tt>gradle idea</tt> from the root.
+     * Basically, for non-trivial projects it is recommended to always run <tt>gradle jdev</tt> from the root.
      * <p>
      * For example see docs for {@link JDevModule}
      */
@@ -159,14 +159,14 @@ class JDevModule {
     Set<File> sourceDirs
 
     /**
-     * The keys of this map are the IDEA scopes. Each key points to another map that has two keys, plus and minus.
+     * The keys of this map are the JDEV scopes. Each key points to another map that has two keys, plus and minus.
      * The values of those keys are collections of {@link org.gradle.api.artifacts.Configuration} objects. The files of the
      * plus configurations are added minus the files from the minus configurations. See example below...
      * <p>
-     * Example how to use scopes property to enable 'provided' dependencies in the output *.iml file:
+     * Example how to use scopes property to enable 'provided' dependencies in the output *.jpr file:
      * <pre autoTested=''>
      * apply plugin: 'java'
-     * apply plugin: 'idea'
+     * apply plugin: 'jdev'
      *
      * configurations {
      *   provided
@@ -177,7 +177,7 @@ class JDevModule {
      *   //provided "some.interesting:dependency:1.0"
      * }
      *
-     * idea {
+     * jdev {
      *   module {
      *     scopes.PROVIDED.plus += configurations.provided
      *   }
@@ -244,7 +244,7 @@ class JDevModule {
     File testOutputDir
 
     /**
-     * The variables to be used for replacing absolute paths in the iml entries. For example, you might add a
+     * The variables to be used for replacing absolute paths in the jpr entries. For example, you might add a
      * {@code GRADLE_USER_HOME} variable to point to the Gradle user home dir.
      * <p>
      * For example see docs for {@link JDevModule}
@@ -252,7 +252,7 @@ class JDevModule {
     Map<String, File> pathVariables = [:]
 
     /**
-     * The JDK to use for this module. If {@code null}, the value of the existing or default ipr XML (inherited)
+     * The JDK to use for this module. If {@code null}, the value of the existing or default jpr XML (inherited)
      * is used. If it is set to <code>inherited</code>, the project SDK is used. Otherwise the SDK for the corresponding
      * value of java version is used for this module
      * <p>
@@ -261,34 +261,34 @@ class JDevModule {
     String jdkName
 
     /**
-     * See {@link #iml(Closure) }
+     * See {@link #jpr(Closure) }
      */
-    final JDevModuleIml iml
+    final JDevModuleJpr jpr
 
     /**
      * Enables advanced configuration like tinkering with the output XML
-     * or affecting the way existing *.iml content is merged with gradle build information.
+     * or affecting the way existing *.jpr content is merged with gradle build information.
      * <p>
      * For example see docs for {@link JDevModule}.
      */
-    void iml(Closure closure) {
+    void jpr(Closure closure) {
         ConfigureUtil.configure(closure, getIml())
     }
 
     /**
-     * Configures output *.iml file. It's <b>optional</b> because the task should configure it correctly for you
+     * Configures output *.jpr file. It's <b>optional</b> because the task should configure it correctly for you
      * (including making sure it is unique in the multi-module build).
      * If you really need to change the output file name (or the module name) it is much easier to do it via the <b>moduleName</b> property!
      * <p>
-     * Please refer to documentation on <b>moduleName</b> property. In IntelliJ IDEA the module name is the same as the name of the *.iml file.
+     * Please refer to documentation on <b>moduleName</b> property. In Oracle JDEV the module name is the same as the name of the *.jpr file.
      */
     File getOutputFile() {
-        new File((File) iml.getGenerateTo(), getName() + ".iml")
+        new File((File) jpr.getGenerateTo(), getName() + ".jpr")
     }
 
     void setOutputFile(File newOutputFile) {
-        setName(newOutputFile.name.replaceFirst(/\.iml$/,""))
-        iml.generateTo = newOutputFile.parentFile
+        setName(newOutputFile.name.replaceFirst(/\.jpr$/,""))
+        jpr.generateTo = newOutputFile.parentFile
     }
 
     /**
@@ -301,7 +301,7 @@ class JDevModule {
     }
 
     /**
-     * An owner of this IDEA module.
+     * An owner of this JDEV module.
      * <p>
      * If JDevModule requires some information from gradle this field should not be used for this purpose.
      * JDevModule instances should be configured with all necessary information by the plugin or user.
@@ -318,13 +318,13 @@ class JDevModule {
 
     Map<String, Collection<File>> singleEntryLibraries
 
-    JDevModule(org.gradle.api.Project project, JDevModuleIml iml) {
+    JDevModule(org.gradle.api.Project project, JDevModuleJpr jpr) {
         this.project = project
-        this.iml = iml
+        this.jpr = jpr
     }
 
     void mergeXmlModule(Module xmlModule) {
-        iml.beforeMerged.execute(xmlModule)
+        jpr.beforeMerged.execute(xmlModule)
 
         def path = { getPathFactory().path(it) }
         def contentRoot = path(getContentRoot())
@@ -338,6 +338,6 @@ class JDevModule {
         xmlModule.configure(contentRoot, sourceFolders, testSourceFolders, excludeFolders,
                 getInheritOutputDirs(), outputDir, testOutputDir, dependencies, getJdkName())
 
-        iml.whenMerged.execute(xmlModule)
+        jpr.whenMerged.execute(xmlModule)
     }
 }

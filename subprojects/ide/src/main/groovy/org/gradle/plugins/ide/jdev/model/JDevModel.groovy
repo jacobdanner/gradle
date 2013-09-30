@@ -19,8 +19,8 @@ package org.gradle.plugins.ide.jdev.model
 import org.gradle.util.ConfigureUtil
 
 /**
- * DSL-friendly model of the IDEA project information.
- * First point of entry when it comes to customizing the IDEA generation.
+ * DSL-friendly model of the JDEV project information.
+ * First point of entry when it comes to customizing the JDEV generation.
  * <p>
  * See the examples in docs for {@link JDevModule} or {@link JDevProject}.
  * <p>
@@ -28,28 +28,28 @@ import org.gradle.util.ConfigureUtil
 class JDevModel {
 
     /**
-     * Configures IDEA module information.
+     * Configures JDEV module information.
      * <p>
      * For examples see docs for {@link JDevModule}.
      */
     JDevModule module
 
     /**
-     * Configures IDEA project information.
+     * Configures JDEV project information.
      * <p>
      * For examples see docs for {@link JDevProject}.
      */
     JDevProject project
 
     /**
-     * Configures IDEA workspace information.
+     * Configures JDEV workspace information.
      * <p>
      * For examples see docs for {@link JDevWorkspace}.
      */
     JDevWorkspace workspace = new JDevWorkspace()
 
     /**
-     * Configures IDEA module information.
+     * Configures JDEV module information.
      * <p>
      * For examples see docs for {@link JDevModule}.
      *
@@ -60,7 +60,7 @@ class JDevModel {
     }
 
     /**
-     * Configures IDEA project information.
+     * Configures JDEV project information.
      * <p>
      * For examples see docs for {@link JDevProject}.
      *
@@ -71,7 +71,7 @@ class JDevModel {
     }
 
     /**
-     * Configures IDEA workspace information.
+     * Configures JDEV workspace information.
      * <p>
      * For examples see docs for {@link JDevWorkspace}.
      *
@@ -82,7 +82,7 @@ class JDevModel {
     }
 
     /**
-     * Adds path variables to be used for replacing absolute paths in resulting files (*.iml, etc.).
+     * Adds path variables to be used for replacing absolute paths in resulting files (*.jpr, etc.).
      * <p>
      * For example see docs for {@link JDevModule}.
      *

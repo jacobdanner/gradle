@@ -20,11 +20,11 @@ import org.gradle.api.internal.xml.XmlTransformer
 import org.gradle.plugins.ide.internal.generator.XmlPersistableConfigurationObject
 
 /**
- * Represents the customizable elements of an ipr (via XML hooks everything of the ipr is customizable).
+ * Represents the customizable elements of an jpr (via XML hooks everything of the jpr is customizable).
  */
 class Project extends XmlPersistableConfigurationObject {
     /**
-     * A set of {@link Path} instances pointing to the modules contained in the ipr.
+     * A set of {@link Path} instances pointing to the modules contained in the jpr.
      */
     Set<Path> modulePaths = []
 
@@ -39,7 +39,7 @@ class Project extends XmlPersistableConfigurationObject {
     Jdk jdk
 
     /**
-     * The project-level libraries of the IDEA project.
+     * The project-level libraries of the JDEV project.
      */
     @Incubating
     Set<ProjectLibrary> projectLibraries = [] as LinkedHashSet

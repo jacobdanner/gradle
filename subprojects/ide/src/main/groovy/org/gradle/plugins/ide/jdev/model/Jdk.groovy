@@ -17,7 +17,7 @@ package org.gradle.plugins.ide.jdev.model
 
 /**
  * Represents information for the project Java SDK. This translates to attributes of the ProjectRootManager
- * element in the ipr.
+ * element in the jpr.
  */
 class Jdk {
     boolean assertKeyword
@@ -25,7 +25,7 @@ class Jdk {
     String languageLevel
     String projectJdkName
 
-    def Jdk(String jdkName, JDevLanguageLevel ideaLanguageLevel) {
+    def Jdk(String jdkName, JDevLanguageLevel jdevLanguageLevel) {
         if (jdkName.startsWith("1.4")) {
             assertKeyword = true
             jdk15 = false
@@ -37,7 +37,7 @@ class Jdk {
         else {
             assertKeyword = false
         }
-        languageLevel = ideaLanguageLevel.level
+        languageLevel = jdevLanguageLevel.level
         projectJdkName = jdkName
     }
 

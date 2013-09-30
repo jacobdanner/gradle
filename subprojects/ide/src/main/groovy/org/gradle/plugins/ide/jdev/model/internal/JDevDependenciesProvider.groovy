@@ -26,11 +26,11 @@ class JDevDependenciesProvider {
     private final IdeDependenciesExtractor dependenciesExtractor = new IdeDependenciesExtractor()
     Closure getPath;
 
-    Set<org.gradle.plugins.ide.jdev.model.Dependency> provide(JDevModule ideaModule) {
-        getPath = { File file -> file? ideaModule.pathFactory.path(file) : null }
+    Set<org.gradle.plugins.ide.jdev.model.Dependency> provide(JDevModule jdevModule) {
+        getPath = { File file -> file? jdevModule.pathFactory.path(file) : null }
 
         Set result = new LinkedHashSet()
-        ideaModule.singleEntryLibraries.each { scope, files ->
+        jdevModule.singleEntryLibraries.each { scope, files ->
             files.each {
                 if (it && it.isDirectory()) {
                     result << new SingleEntryModuleLibrary(getPath(it), scope)
@@ -38,9 +38,9 @@ class JDevDependenciesProvider {
             }
         }
 
-        ideaModule.scopes.each { scopeName, scopeMap ->
-            result.addAll(getModuleLibraries(ideaModule, scopeName, scopeMap))
-            result.addAll(getModules(ideaModule.project, scopeName, scopeMap))
+        jdevModule.scopes.each { scopeName, scopeMap ->
+            result.addAll(getModuleLibraries(jdevModule, scopeName, scopeMap))
+            result.addAll(getModules(jdevModule.project, scopeName, scopeMap))
             result
         }
 
@@ -52,21 +52,21 @@ class JDevDependenciesProvider {
             return []
         }
         return dependenciesExtractor.extractProjectDependencies(scopeMap.plus, scopeMap.minus).collect {
-                new ModuleDependencyBuilder().create(it.project, scopeName)
+                new JDevModuleDependencyBuilder().create(it.project, scopeName)
         }
     }
 
-    protected Set getModuleLibraries(JDevModule ideaModule, String scopeName, Map scopeMap) {
+    protected Set getModuleLibraries(JDevModule jdevModule, String scopeName, Map scopeMap) {
         if (!scopeMap) {
             return []
         }
 
         LinkedHashSet moduleLibraries = []
 
-        if (!ideaModule.offline) {
+        if (!jdevModule.offline) {
             def repoFileDependencies = dependenciesExtractor.extractRepoFileDependencies(
-                    ideaModule.project.configurations, scopeMap.plus, scopeMap.minus,
-                    ideaModule.downloadSources, ideaModule.downloadJavadoc)
+                    jdevModule.project.configurations, scopeMap.plus, scopeMap.minus,
+                    jdevModule.downloadSources, jdevModule.downloadJavadoc)
 
             repoFileDependencies.each {
                 def library = new SingleEntryModuleLibrary(

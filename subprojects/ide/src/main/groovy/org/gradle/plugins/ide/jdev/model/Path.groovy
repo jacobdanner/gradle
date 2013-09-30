@@ -16,7 +16,7 @@
 package org.gradle.plugins.ide.jdev.model
 
 /**
- * Represents a path in a format as used often in ipr and iml files.
+ * Represents a path in a format as used often in jpr and jpr files.
  */
 class Path {
     /**

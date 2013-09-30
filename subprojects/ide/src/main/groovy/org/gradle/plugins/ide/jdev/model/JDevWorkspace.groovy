@@ -16,19 +16,20 @@
 
 package org.gradle.plugins.ide.jdev.model
 
+
 import org.gradle.plugins.ide.api.XmlFileContentMerger
 import org.gradle.util.ConfigureUtil
 
 /**
- * Enables fine-tuning workspace details (*.iws file) of the IDEA plugin.
+ * Enables fine-tuning workspace details (*.jws file) of the JDEV plugin.
  * <p>
  * At the moment, the only practical way of manipulating the resulting content is via the withXml hook:
  *
  * <pre autoTested=''>
  * apply plugin: 'java'
- * apply plugin: 'idea'
+ * apply plugin: 'jdev'
  *
- * idea.workspace.iws.withXml { provider ->
+ * jdev.workspace.jws.withXml { provider ->
  *     provider.asNode().appendNode('gradleRocks', 'true')
  * }
  * </pre>
@@ -42,7 +43,7 @@ class JDevWorkspace {
      *
      * @param closure
      */
-    void iws(Closure closure) {
+    void jws(Closure closure) {
         ConfigureUtil.configure(closure, getIws())
     }
 
@@ -51,15 +52,15 @@ class JDevWorkspace {
      * <p>
      * For example see docs for {@link JDevWorkspace}
      */
-    XmlFileContentMerger iws
+    XmlFileContentMerger jws
 
     void mergeXmlWorkspace(Workspace xmlWorkspace) {
-        iws.beforeMerged.execute(xmlWorkspace)
+        jws.beforeMerged.execute(xmlWorkspace)
 
-        //we don't merge anything in the iws, yet.
+        //we don't merge anything in the jws, yet.
         //I kept the logic for the sake of consistency
-        // and compatibility with pre M4 ways of configuring IDEA information.
+        // and compatibility with pre M4 ways of configuring JDEV information.
 
-        iws.whenMerged.execute(xmlWorkspace)
+        jws.whenMerged.execute(xmlWorkspace)
     }
 }

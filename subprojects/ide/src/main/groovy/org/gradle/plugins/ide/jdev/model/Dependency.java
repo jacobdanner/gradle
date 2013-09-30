@@ -18,7 +18,7 @@ package org.gradle.plugins.ide.jdev.model;
 import groovy.util.Node;
 
 /**
- * Represents a dependency of an IDEA module.
+ * Represents a dependency of an JDEV module.
  */
 public interface Dependency {
     void addToNode(Node parentNode);

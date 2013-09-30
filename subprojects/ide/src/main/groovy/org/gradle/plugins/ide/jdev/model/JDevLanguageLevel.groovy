@@ -19,7 +19,7 @@ package org.gradle.plugins.ide.jdev.model
 import org.gradle.api.JavaVersion
 
 /**
- * Java language level used by IDEA projects.
+ * Java language level used by JDEV projects.
  */
 class JDevLanguageLevel {
 

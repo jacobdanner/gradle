@@ -19,7 +19,7 @@ import org.gradle.api.internal.xml.XmlTransformer
 import org.gradle.plugins.ide.internal.generator.XmlPersistableConfigurationObject
 
 /**
- * Represents the customizable elements of an ipr (via XML hooks everything of the ipr is customizable).
+ * Represents the customizable elements of an jpr (via XML hooks everything of the jpr is customizable).
  */
 
 class Workspace extends XmlPersistableConfigurationObject {
@@ -28,7 +28,7 @@ class Workspace extends XmlPersistableConfigurationObject {
     }
 
     @Override protected String getDefaultResourceName() {
-        return 'defaultWorkspace.xml'
+        return 'defaultProject.jpr'
     }
 
     @Override protected void load(Node xml) {

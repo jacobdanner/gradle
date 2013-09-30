@@ -18,7 +18,7 @@ package org.gradle.plugins.ide.jdev.model
 import org.gradle.api.Incubating
 
 /**
- * A project-level IDEA library.
+ * A project-level JDEV library.
  */
 @Incubating
 class ProjectLibrary {

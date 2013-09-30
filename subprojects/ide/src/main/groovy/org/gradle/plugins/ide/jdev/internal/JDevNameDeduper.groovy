@@ -23,11 +23,11 @@ import org.gradle.plugins.ide.internal.configurer.ProjectDeduper
 class JDevNameDeduper {
 
     void configureRoot(Project rootProject) {
-        def ideaProjects = rootProject.allprojects.findAll { it.plugins.hasPlugin(JDevPlugin) }
-        new ProjectDeduper().dedupe(ideaProjects, { project ->
+        def jdevProjects = rootProject.allprojects.findAll { it.plugins.hasPlugin(JDevPlugin) }
+        new ProjectDeduper().dedupe(jdevProjects, { project ->
             new DeduplicationTarget(project: project,
-                    moduleName: project.ideaModule.module.name,
-                    updateModuleName: { project.ideaModule.module.name = it } )
+                    moduleName: project.jdevModule.module.name,
+                    updateModuleName: { project.jdevModule.module.name = it } )
         })
     }
 }

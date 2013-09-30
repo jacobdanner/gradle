@@ -18,11 +18,9 @@ package org.gradle.plugins.ide.jdev
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.plugins.scala.ScalaBasePlugin
 import org.gradle.internal.reflect.Instantiator
 import org.gradle.plugins.ide.api.XmlFileContentMerger
 import org.gradle.plugins.ide.jdev.internal.JDevNameDeduper
-import org.gradle.plugins.ide.jdev.internal.JDevScalaConfigurer
 import org.gradle.plugins.ide.jdev.model.*
 import org.gradle.plugins.ide.internal.IdePlugin
 
@@ -42,20 +40,19 @@ class JDevPlugin extends IdePlugin {
     }
 
     @Override protected String getLifecycleTaskName() {
-        return 'idea'
+        return 'jdev'
     }
 
     @Override protected void onApply(Project project) {
-        lifecycleTask.description = 'Generates IDEA project files (IML, IPR, IWS)'
-        cleanTask.description = 'Cleans IDEA project files (IML, IPR)'
+        lifecycleTask.description = 'Generates JDev project files (JWS, JPR)'
+        cleanTask.description = 'Cleans JDev project files (JWS, JPR)'
 
-        model = project.extensions.create("idea", JDevModel)
+        model = project.extensions.create("jdev", JDevModel)
 
         configureJDevWorkspace(project)
         configureJDevProject(project)
         configureJDevModule(project)
         configureForJavaPlugin(project)
-        configureForScalaPlugin()
 
         hookDeduplicationToTheRoot(project)
     }
@@ -74,19 +71,19 @@ class JDevPlugin extends IdePlugin {
 
     private configureJDevWorkspace(Project project) {
         if (isRoot(project)) {
-            def task = project.task('ideaWorkspace', description: 'Generates an IDEA workspace file (IWS)', type: GenerateJDevWorkspace) {
-                workspace = new JDevWorkspace(iws: new XmlFileContentMerger(xmlTransformer))
+            def task = project.task('jdevWorkspace', description: 'Generates an JDev workspace file (JWS)', type: GenerateJDevWorkspace) {
+                workspace = new JDevWorkspace(jws: new XmlFileContentMerger(xmlTransformer))
                 model.workspace = workspace
-                outputFile = new File(project.projectDir, project.name + ".iws")
+                outputFile = new File(project.projectDir, project.name + ".jws")
             }
             addWorker(task, false)
         }
     }
 
     private configureJDevModule(Project project) {
-        def task = project.task('ideaModule', description: 'Generates IDEA module files (IML)', type: GenerateJDevModule) {
-            def iml = new JDevModuleIml(xmlTransformer, project.projectDir)
-            module = instantiator.newInstance(JDevModule, project, iml)
+        def task = project.task('jdevModule', description: 'Generates JDev module files (JPR)', type: GenerateJDevModule) {
+            def jpr = new JDevModuleJpr(xmlTransformer, project.projectDir)
+            module = instantiator.newInstance(JDevModule, project, jpr)
 
             model.module = module
 
@@ -111,21 +108,21 @@ class JDevPlugin extends IdePlugin {
 
     private configureJDevProject(Project project) {
         if (isRoot(project)) {
-            def task = project.task('ideaProject', description: 'Generates IDEA project file (IPR)', type: GenerateJDevProject) {
-                def ipr = new XmlFileContentMerger(xmlTransformer)
-                ideaProject = instantiator.newInstance(JDevProject, ipr)
+            def task = project.task('jdevProject', description: 'Generates JDev project file (JPR)', type: GenerateJDevProject) {
+                def jpr = new XmlFileContentMerger(xmlTransformer)
+                jdevProject = instantiator.newInstance(JDevProject, jpr)
 
-                model.project = ideaProject
+                model.project = jdevProject
 
-                ideaProject.outputFile = new File(project.projectDir, project.name + ".ipr")
-                ideaProject.conventionMapping.jdkName = { JavaVersion.current().toString() }
-                ideaProject.conventionMapping.languageLevel = { new JDevLanguageLevel(JavaVersion.VERSION_1_6) }
-                ideaProject.wildcards = ['!?*.java', '!?*.groovy'] as Set
-                ideaProject.conventionMapping.modules = {
-                    project.rootProject.allprojects.findAll { it.plugins.hasPlugin(JDevPlugin) }.collect { it.idea.module }
+                jdevProject.outputFile = new File(project.projectDir, project.name + ".jpr")
+                jdevProject.conventionMapping.jdkName = { JavaVersion.current().toString() }
+                jdevProject.conventionMapping.languageLevel = { new JDevLanguageLevel(JavaVersion.VERSION_1_6) }
+                jdevProject.wildcards = ['!?*.java', '!?*.groovy'] as Set
+                jdevProject.conventionMapping.modules = {
+                    project.rootProject.allprojects.findAll { it.plugins.hasPlugin(JDevPlugin) }.collect { it.jdev.module }
                 }
 
-                ideaProject.conventionMapping.pathFactory = {
+                jdevProject.conventionMapping.pathFactory = {
                     new PathFactory().addPathVariable('PROJECT_DIR', outputFile.parentFile)
                 }
             }
@@ -142,14 +139,14 @@ class JDevPlugin extends IdePlugin {
 
     private configureJDevProjectForJava(Project project) {
         if (isRoot(project)) {
-            project.idea.project.conventionMapping.languageLevel = {
+            project.jdev.project.conventionMapping.languageLevel = {
                 new JDevLanguageLevel(project.sourceCompatibility)
             }
         }
     }
 
     private configureJDevModuleForJava(Project project) {
-        project.ideaModule {
+        project.jdevModule {
             module.conventionMapping.sourceDirs = { project.sourceSets.main.allSource.srcDirs as LinkedHashSet }
             module.conventionMapping.testSourceDirs = { project.sourceSets.test.allSource.srcDirs as LinkedHashSet }
             def configurations = project.configurations
@@ -171,15 +168,6 @@ class JDevPlugin extends IdePlugin {
         }
     }
 
-    private void configureForScalaPlugin() {
-        project.plugins.withType(ScalaBasePlugin) {
-            //see JDevScalaConfigurer
-            project.tasks.ideaModule.dependsOn(project.rootProject.tasks.ideaProject)
-        }
-        if (isRoot(project)) {
-            new JDevScalaConfigurer(project).configure()
-        }
-    }
 
     private boolean isRoot(Project project) {
         return project.parent == null

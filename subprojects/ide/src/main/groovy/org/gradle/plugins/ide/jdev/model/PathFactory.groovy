@@ -46,7 +46,7 @@ class PathFactory {
             return relativePath(match.dir, match.name, file)
         }
 
-        // IDEA doesn't like the result of file.toURI() so use the absolute path instead
+        // JDEV doesn't like the result of file.toURI() so use the absolute path instead
         def relPath = file.absolutePath.replace(File.separator, '/')
         def url = relativePathToURI(relPath)
         return new FilePath(file, url, url, relPath)

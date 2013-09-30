@@ -20,7 +20,7 @@ import org.gradle.plugins.ide.jdev.model.JDevWorkspace
 import org.gradle.plugins.ide.jdev.model.Workspace
 
 /**
- * Generates an IDEA workspace file *only* for root project.
+ * Generates an JDEV workspace file *only* for root project.
  * There's little you can configure about workspace generation at the moment.
  */
 public class GenerateJDevWorkspace extends XmlGeneratorTask<Workspace> {

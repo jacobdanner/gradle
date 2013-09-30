@@ -16,7 +16,7 @@
 package org.gradle.plugins.ide.jdev.model
 
 /**
- * Represents an orderEntry of type module in the iml XML.
+ * Represents an orderEntry of type module in the jpr XML.
  */
 class ModuleDependency implements Dependency {
     /**

@@ -20,10 +20,10 @@ import org.gradle.api.Project
 import org.gradle.plugins.ide.jdev.JDevPlugin
 import org.gradle.plugins.ide.jdev.model.ModuleDependency
 
-class ModuleDependencyBuilder {
+class JDevModuleDependencyBuilder {
     ModuleDependency create(Project project, String scope) {
         if (project.plugins.hasPlugin(JDevPlugin)) {
-            new ModuleDependency(project.idea.module.name, scope)
+            new ModuleDependency(project.jdev.module.name, scope)
         } else {
             new ModuleDependency(project.name, scope)
         }

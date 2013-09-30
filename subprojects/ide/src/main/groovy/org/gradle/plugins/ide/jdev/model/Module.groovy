@@ -20,7 +20,7 @@ import org.gradle.plugins.ide.internal.generator.XmlPersistableConfigurationObje
 import org.gradle.util.DeprecationLogger
 
 /**
- * Represents the customizable elements of an iml (via XML hooks everything of the iml is customizable).
+ * Represents the customizable elements of an jpr (via XML hooks everything of the jpr is customizable).
  */
 class Module extends XmlPersistableConfigurationObject {
     static final String INHERITED = "inherited"

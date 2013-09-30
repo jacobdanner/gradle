@@ -16,7 +16,7 @@
 package org.gradle.plugins.ide.jdev.model
 
 /**
- * Represents a jar directory element of an idea module library.
+ * Represents a jar directory element of an jdev module library.
  */
 class JarDirectory {
     /**

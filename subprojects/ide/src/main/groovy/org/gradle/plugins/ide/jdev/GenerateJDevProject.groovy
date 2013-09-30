@@ -20,34 +20,34 @@ import org.gradle.plugins.ide.jdev.model.JDevProject
 import org.gradle.plugins.ide.jdev.model.Project
 
 /**
- * Generates an IDEA project file for root project *only*. If you want to fine tune the idea configuration
+ * Generates an JDEV project file for root project *only*. If you want to fine tune the jdev configuration
  * <p>
  * At this moment nearly all configuration is done via {@link JDevProject}.
  */
 public class GenerateJDevProject extends XmlGeneratorTask<Project> {
 
     /**
-     * idea project model
+     * jdev project model
      */
-    JDevProject ideaProject;
+    JDevProject jdevProject;
 
     @Override protected void configure(Project xmlModule) {
         getJDevProject().mergeXmlProject(xmlModule)
     }
 
     @Override Project create() {
-        def project = new Project(xmlTransformer, ideaProject.pathFactory)
+        def project = new Project(xmlTransformer, jdevProject.pathFactory)
         return project
     }
 
     /**
-     * output *.ipr file
+     * output *.jpr file
      */
     File getOutputFile() {
-        return ideaProject.outputFile
+        return jdevProject.outputFile
     }
 
     void setOutputFile(File newOutputFile) {
-        ideaProject.outputFile = newOutputFile
+        jdevProject.outputFile = newOutputFile
     }
 }

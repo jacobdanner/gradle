@@ -33,7 +33,7 @@ class SingleEntryModuleLibrary extends ModuleLibrary {
     /**
      * Creates single entry module library
      *
-     * @param library a path to jar or class folder in idea format
+     * @param library a path to jar or class folder in jdev format
      * @param javadoc a path to javadoc jar or javadoc folder
      * @param source a path to source jar or source folder
      * @param scope scope

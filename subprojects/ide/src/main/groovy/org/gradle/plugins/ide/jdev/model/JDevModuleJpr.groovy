@@ -20,19 +20,19 @@ import org.gradle.api.internal.xml.XmlTransformer
 import org.gradle.plugins.ide.api.XmlFileContentMerger
 
 /**
- * Models the generation/parsing/merging capabilities of an IDEA module.
+ * Models the generation/parsing/merging capabilities of an JDEV module.
  * <p>
  * For examples, see docs for {@link JDevModule}.
  */
-class JDevModuleIml extends XmlFileContentMerger {
+class JDevModuleJpr extends XmlFileContentMerger {
 
-    JDevModuleIml(XmlTransformer xmlTransformer, File generateTo) {
+  JDevModuleJpr(XmlTransformer xmlTransformer, File generateTo) {
         super(xmlTransformer)
         this.generateTo = generateTo
     }
 
     /**
-     * Folder where the *.iml file will be generated to
+     * Folder where the *.jpr file will be generated to
      * <p>
      * For example see docs for {@link JDevModule}
      */
